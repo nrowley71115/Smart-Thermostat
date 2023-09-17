@@ -21,7 +21,6 @@ while True:
     sleep(DELAY)
 
     temperature, humidity = get_temp_hum(DHT_TYPE, DHT_GPIO_PIN)
-
     if humidity is not None or temperature is not None:
         # Print what we got to the REPL
         print(f"Temp: {temperature} *F \t Humidity: {humidity}%")
