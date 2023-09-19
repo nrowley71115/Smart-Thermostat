@@ -6,11 +6,18 @@ import RPi.GPIO as gpio
 # packages for DHT
 import Adafruit_DHT
 
+# packages for LCD Display
+from RPLCD import CharLCD
+
 # Gloabal Variables
 # TODO Set GPIO Pins
 DELAY = 2
 DHT_GPIO_PIN = 4
 DHT_TYPE = 22
+
+COLS, ROWS = 16, 2
+PIN_RS, PIN_E = 37, 35
+LCD_PINS = [33, 31 ,29, 23]
 
 # initalize RPi, LCD, & DHT
 init_rpi()
@@ -46,6 +53,11 @@ def get_temp_hum(DHT_TYPE, DHT_GPIO_PIN):
 
 def get_humidity():
     pass
+
+def LCD_write(str1, str2):
+    lcd = CharLCD(cols=COLS, rows=ROWS, pin_rs=PIN_RS, pin_e=PIN_E, pins_data=LCD_PINS)
+    lcd.write_string(f'{str1}\n\r{str2}')
+
 
 # TODO Update 16x2 LCD Display
 # 6 GPIO
