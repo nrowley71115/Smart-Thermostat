@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temperature Control</title>
-</head>
-<body>
+{% extends "layout.html" %}
+
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
     <h1>Temperature Control</h1>
-    
+
     <p>Current Temperature: <span id="currentTemperature">20</span>°F</p>
-    
+
     <form id="temperatureControlForm">
         <label for="setpointTemperature">Setpoint Temperature (°C):</label>
         <input type="number" id="setpointTemperature" name="setpointTemperature" step="1" min="0">
@@ -18,7 +18,7 @@
             <legend>System</legend>
             <input type="radio" id="ac" name="system" value="AC">
             <label for="ac">AC</label>
-            <input type="radio" id="off" name="system" value="OFF">
+            <input type="radio" id="off" name="system" value="OFF" checked>
             <label for="off">OFF</label>
             <input type="radio" id="heat" name="system" value="HEAT">
             <label for="heat">HEAT</label>
@@ -30,12 +30,10 @@
             <label for="fanOn">ON</label>
             <input type="radio" id="fanOff" name="fan" value="OFF">
             <label for="fanOff">OFF</label>
-            <input type="radio" id="fanAuto" name="fan" value="AUTO">
+            <input type="radio" id="fanAuto" name="fan" value="AUTO" checked>
             <label for="fanAuto">AUTO</label>
         </fieldset>
         
         <button type="button" id="updateButton">Update</button>
     </form>
-
-</body>
-</html>
+{% endblock %}
