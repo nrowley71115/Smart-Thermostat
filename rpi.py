@@ -19,21 +19,22 @@ COLS, ROWS = 16, 2
 PIN_RS, PIN_E = 37, 35
 LCD_PINS = [33, 31 ,29, 23]
 
-# initalize RPi, LCD, & DHT
-init_rpi()
-init_dht()
+def main():
+    # initalize RPi, LCD, & DHT
+    init_rpi()
+    init_dht()
 
-while True:
-    # Introduce delay
-    sleep(DELAY)
+    while True:
+        # Introduce delay
+        sleep(DELAY)
 
-    temperature, humidity = get_temp_hum(DHT_TYPE, DHT_GPIO_PIN)
-    if humidity is not None or temperature is not None:
-        # Print what we got to the REPL
-        print(f"Temp: {temperature} *F \t Humidity: {humidity}%")
-    else:
-        # Reading doesn't always work! Just print error and we'll try again
-        print("DHT failure")
+        temperature, humidity = get_temp_hum(DHT_TYPE, DHT_GPIO_PIN)
+        if humidity is not None or temperature is not None:
+            # Print what we got to the REPL
+            print(f"Temp: {temperature} *F \t Humidity: {humidity}%")
+        else:
+            # Reading doesn't always work! Just print error and we'll try again
+            print("DHT failure")
 
 
 def init_rpi():
@@ -58,6 +59,8 @@ def LCD_write(str1, str2):
     lcd = CharLCD(cols=COLS, rows=ROWS, pin_rs=PIN_RS, pin_e=PIN_E, pins_data=LCD_PINS)
     lcd.write_string(f'{str1}\n\r{str2}')
 
+if __name__ == '__main__':
+    main()
 
 # TODO Update 16x2 LCD Display
 # 6 GPIO
