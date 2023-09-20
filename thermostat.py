@@ -1,7 +1,7 @@
 import json
 # TODO import all rspi elements here
 
-SETPOINT_JSON_PATH = 'setpoint.json'
+SETPOINT_JSON_PATH = 'options/setpoint.json'
 
 class Thermostat():
     def __init__(self):
