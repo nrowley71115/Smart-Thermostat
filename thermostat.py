@@ -1,7 +1,9 @@
 import json
+from datetime import datetime, timedelta
 # TODO import all rspi elements here
 
 SETPOINT_JSON_PATH = 'options/setpoint.json'
+SCHEDULE_JSON_PATH = 'options/schedule.json'
 
 class Thermostat():
     def __init__(self):
@@ -55,9 +57,35 @@ class Thermostat():
         else:
             return 'error'
 
-    def get_schedule(self):
-        # TODO build default scheudle data type and return
-        pass
+    def get_rounded_time(self):
+        # Get the current date and time
+        current_datetime = datetime.now()
+
+        # Round to the neareset 30 minutes
+        minutes = current_datetime.minute
+        rounded_minutes = round(minutes / 30) * 30
+        rounded_time = current_datetime.replace(minute=rounded_minutes, second=0, microsecond=0)
+        return rounded_time
+
+    def get_schedule_setpoint(self):
+        # Load the schedule json file
+        with open(SCHEDULE_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+
+        # Get current time rounded the current time to the nearest 30 minutes
+        rounded_time = self.get_rounded_time()
+
+        # Format the current time in military time (24 hour clock)
+        current_military_time = rounded_time.strftime("%H%M")
+
+        print(f'Current time: {datetime.now()}')
+        print(f'Current rounded time: {rounded_time}')
+        print(f'Current military time: {current_military_time}')
+
+        # TODO error handle key error if current time is not in schedule (i.e. 12:00 AM)
+        
+        # Return scheduled setpoint for current time
+        return data[current_military_time]
 
     def update_schedule(self):
         # TODO update the schedule datatype
@@ -71,8 +99,5 @@ class Thermostat():
 if __name__ == '__main__':    
     t = Thermostat()
 
-    t.set_setpoint(0)
-    print(f'Setpoint: {t.get_setpoint()} degF')
-
-    t.set_setpoint(72)
-    print(f'Setpoint: {t.get_setpoint()} degF')
+    military_time = t.get_schedule_setpoint()
+    print(f'Time: {military_time} degF')
