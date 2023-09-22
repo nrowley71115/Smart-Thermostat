@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, redirect
+from thermostat import Thermostat
 
 app = Flask(__name__)
 
@@ -17,7 +18,15 @@ def statistics():
     return render_template("statistics.html")
 
 
-@app.route("/schedule")
+@app.route("/schedule", methods=['GET', 'POST'])
 def schedule():
-    # TODO Implement schedule page
-    return render_template("schedule.html")
+    if request.method == 'POST':
+        # TODO get schedule from form
+        # TODO set schedule
+        return redirect("/schedule")
+    else:
+        # Get schedule from thermostat
+        thermostat = Thermostat()
+        schedule = thermostat.get_schedule()
+
+        return render_template("schedule.html", schedule=schedule)

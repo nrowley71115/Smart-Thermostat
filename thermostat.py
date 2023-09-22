@@ -114,6 +114,11 @@ class Thermostat():
         
         return military_time_str
 
+    def get_schedule(self):
+        # Load the schedule json file
+        with open(SCHEDULE_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        return data
 
     def get_schedule_setpoint(self):
         # Load the schedule json file
