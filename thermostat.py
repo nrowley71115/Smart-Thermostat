@@ -9,6 +9,9 @@ class Thermostat():
     def __init__(self):
         self.setpoint_f = 0
         self.humidity = 0
+        self.max_setpoint = 85
+        self.min_setpoint = 55
+
         # TODO set GPIO pins here
     
     def get_temp_hum(self):
@@ -28,6 +31,7 @@ class Thermostat():
         with open(SETPOINT_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
         return data["setpoint"]
+
 
     def set_system(self, mode):
         if mode.upper() == 'ON':
@@ -57,8 +61,9 @@ class Thermostat():
         else:
             return 'error'
 
+
     def get_rounded_time(self):
-        # TODO if already military time change function name -> else use convert_to_military_time method
+        """ Return current time rounded to the nearest 30min in '12:30 PM' format"""
 
         # Get the current date and time
         current_datetime = datetime.now()
@@ -68,19 +73,27 @@ class Thermostat():
         minutes = current_datetime.minute
         rounded_minutes = round(minutes / 30) * 30
 
-        # Set the rounded time
+        # if minutes is greater than 30, round up to the next hour
         if rounded_minutes == 60:
-            rounded_time = current_datetime.replace(hour=hour+1, minute=0, second=0, microsecond=0)
+            hour += 1
+            rounded_minutes = 0
+
+        # Convert military time to conventional
+        if hour >= 13:
+            hour -= 12
+            am_pm = "PM"
         else:
-            rounded_time = current_datetime.replace(minute=rounded_minutes, second=0, microsecond=0)
-        return rounded_time
+            am_pm = "AM"
+
+        # Format the time string
+        formatted_time = f"{hour}:{rounded_minutes:02d} {am_pm}"
+        return formatted_time
 
     def convert_to_military_time(self, time_str):
-        """ Example usage:
-        input_time = "02:30 PM"  # Change this to your input time
-        military_time = convert_to_military_time(input_time)
-        print(f"Input Time: {input_time}")
-        print(f"Military Time: {military_time}")
+        """ 
+        Example input and output:
+        Input = "02:30 PM", "12:00 AM", "8:30 AM"
+        Output = "1430", "0000", "0830"
         """
         # Split the input time string into components
         time_components = time_str.split(":")
@@ -106,31 +119,68 @@ class Thermostat():
         # Load the schedule json file
         with open(SCHEDULE_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
+        print(f'Schedule data: {data}')
+        print(f'Type of schedule data: {type(data)}')
 
         # Get current time rounded the current time to the nearest 30 minutes
         rounded_time = self.get_rounded_time()
 
         # Format the current time in military time (24 hour clock)
-        current_military_time = rounded_time.strftime("%H%M")
-
-        print(f'Current time: {datetime.now()}')
-        print(f'Current rounded time: {rounded_time}')
-        print(f'Current military time: {current_military_time}')
-
-        # TODO error handle key error if current time is not in schedule (i.e. 12:00 AM)
+        current_military_time = self.convert_to_military_time(rounded_time)
         
         # Return scheduled setpoint for current time
         return data[current_military_time]
 
     def update_schedule(self, start_time, end_time, setpoint):
+        """ Input start and end times in '12:30 PM' format and setpoint as a two digit integer
+        Example input: "12:30 PM", "2:30 PM", 75
+        Output: update the schedule.json file
+        """
         # format the start and end times in military time (24 hour clock)
         start_time = self.convert_to_military_time(start_time)
         end_time = self.convert_to_military_time(end_time)
         
         # Load the schedule json file
-        with open(SCHEDULE_JSON_PATH, 'w') as json_file:
+        with open(SCHEDULE_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
         
+        # Update the schedule json file
+        time = start_time
+        while True:
+            print(f'Updating time: {time}')
+            data[time] = setpoint
+            if time == end_time:
+                break
+            else:
+                time = self.increment_time(time)
+
+        # Save the updated schedule json file
+        with open(SCHEDULE_JSON_PATH, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+
+    def increment_time(self, time_str):
+        """ Example Input & Output:
+        Input = "1430", "0100", "2330"
+        Output = "1500", "0130", "0000"
+        """
+        # Extract hour and minute
+        hour = int(time_str[:2])
+        minute = int(time_str[2:])
+
+        # Increment hour and minute
+        if minute == 30:
+            hour += 1
+            minute = 0
+        elif hour == 23 and minute == 30:    # if it's 11:30 PM, increment to 12:00 AM
+            hour = 0
+            minute = 0
+        else:
+            minute = 30
+
+        # Convert to military time format
+        military_time_str = f"{hour:02d}{minute:02d}"
+        
+        return military_time_str
 
         
 
@@ -142,12 +192,12 @@ class Thermostat():
 if __name__ == '__main__':    
     t = Thermostat()
 
-    # TODO test at a time after 1:30 PM
-    military_time = t.get_schedule_setpoint()
-    print(f'Time: {military_time} degF')
+    current_time = t.get_rounded_time()
+    military_time = t.convert_to_military_time(current_time)
 
+    # get schedule setpioint for current time
+    setpoint = t.get_schedule_setpoint()  
+    #print(f'Setpoint: {setpoint}')
 
-    input_time = "02:50 PM"  # Change this to your input time
-    military_time = t.convert_to_military_time(input_time)
-    print(f"Input Time: {input_time}")
-    print(f"Military Time: {military_time}")
+    # update schedule
+    t.update_schedule("12:30 PM", "7:30 PM", 72)
