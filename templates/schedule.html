@@ -1,23 +1,51 @@
 {% extends "layout.html" %}
 
-
 {% block title %}
 Schedule
 {% endblock %}
 
 {% block content %}
 
+<style>
+#scheduleTable {
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 60%;
+}
+
+#scheduleTable th {
+  background-color: #333;
+  color: #fff;
+  padding: 8px;
+  text-align: left;
+}
+
+#scheduleTable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#scheduleTable td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  width: 50%;
+}
+
+#scheduleTable tr:hover {
+  background-color: #ddd;
+}
+</style>
+
 <!-- Read current schedule -->
 <h2>Current Schedule</h2>
 <table id="scheduleTable">
     <tr>
         <th>Time</th>
-        <th>Temperature (deg F)</th>
+        <th>Temperature</th>
     </tr>
     {% for time, setpoint in schedule.items() %}
     <tr>
         <td>{{time}}</td>
-        <td>{{setpoint}}</td>
+        <td>{{setpoint}} F</td>
     </tr>
     {% endfor %}
 </table>
@@ -26,13 +54,24 @@ Schedule
 <h2>Update Schedule</h2>
 <form id="updateScheculeForm" action="/schedule" method="POST">
     <label>Start Time: </label>
-    <input type="text" id="start_time" name="start_time">
+    <select id="start_time" name="start_time">
+        {% for time in times %}
+        <option value={{time}}>{{time}}</option>
+        {% endfor %}
+    </select>
+
     <label>End Time: </label>
-    <input type="text" id="end_time" name="end_time">
-    <label>Temperature (deg F): </label>
-    <input type="number" id="temperature_setpoint" name="temperature_setpoint">
-    <button type="button" id="updateScheduleButton">Submit</button>   
+    <select id="end_time" name="end_time">
+        {% for time in times %}
+        <option value={{time}}>{{time}}</option>
+        {% endfor %}
+    </select>
+
+    <label>Setpoint Temp: </label>
+    <input type="number" id="temperature_setpoint" name="temperature_setpoint" placeholder="Enter Temperature">
+    <button type="submit" id="updateScheduleButton">Submit</button>   
 </form>
 
+<br><br>
 
 {% endblock %}

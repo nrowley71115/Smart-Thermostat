@@ -89,6 +89,29 @@ class Thermostat():
         formatted_time = f"{hour}:{rounded_minutes:02d} {am_pm}"
         return formatted_time
 
+    def convert_to_standard_time(self, time_str):
+        """
+        Example input and output:
+        Input = "1430", "0000", "0830"
+        Output = "2:30 PM", "12:00 AM", "8:30 AM"
+        """
+        # Extract hour and minute
+        hour = int(time_str[:2])
+        minute = int(time_str[2:])
+
+        # Convert to standard time format
+        if hour >= 13:
+            hour -= 12
+            am_pm = "PM"
+        elif hour == 0:
+            hour = 12
+            am_pm = "AM"
+        else:
+            am_pm = "AM"
+
+        standard_time_str = f"{hour}:{minute:02d} {am_pm}"
+        return standard_time_str
+
     def convert_to_military_time(self, time_str):
         """ 
         Example input and output:
@@ -196,13 +219,4 @@ class Thermostat():
 
 if __name__ == '__main__':    
     t = Thermostat()
-
-    current_time = t.get_rounded_time()
-    military_time = t.convert_to_military_time(current_time)
-
-    # get schedule setpioint for current time
-    setpoint = t.get_schedule_setpoint()  
-    #print(f'Setpoint: {setpoint}')
-
-    # update schedule
-    t.update_schedule("12:30 PM", "7:30 PM", 72)
+    print('Thermostat.py working')
