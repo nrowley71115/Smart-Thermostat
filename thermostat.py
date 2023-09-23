@@ -138,17 +138,17 @@ class Thermostat():
         return military_time_str
 
     def get_schedule(self):
+        """ Return the schedule as a dictionary """
         # Load the schedule json file
         with open(SCHEDULE_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
         return data
 
     def get_schedule_setpoint(self):
+        """ Return the setpoint for the current time """
         # Load the schedule json file
         with open(SCHEDULE_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
-        print(f'Schedule data: {data}')
-        print(f'Type of schedule data: {type(data)}')
 
         # Get current time rounded the current time to the nearest 30 minutes
         rounded_time = self.get_rounded_time()
@@ -210,13 +210,9 @@ class Thermostat():
         
         return military_time_str
 
-        
-
-    def display_output(self, line1, line2):
-        # TODO use two strings to ouput the first and second line of the 16x2 LCD display
-        pass
-
 
 if __name__ == '__main__':    
     t = Thermostat()
-    print('Thermostat.py working')
+
+    setpoint = t.get_schedule_setpoint()
+    print(f'Setpoint: {setpoint}')
