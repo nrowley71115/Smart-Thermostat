@@ -69,9 +69,11 @@ if __name__ == '__main__':
 
 
       # TODO update setpoint if necessary
+      # t.update_setpoint(setpoint)
 
 
       # TODO get current system mode
+      # TODO build json for modes
       ac_mode = "N"
       fan_mode = "F"
       heat_mode = "A"
@@ -82,7 +84,9 @@ if __name__ == '__main__':
 
 
       # TODO control the thermostat - ie relays on or off
-
+      # 
+      if ac_mode and temperature_f < setpoint - t.deadband:
+         pass
 
       sleep(2)
       print("Thermostat running")
