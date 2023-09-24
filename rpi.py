@@ -66,8 +66,10 @@ if __name__ == '__main__':
    
    # Thermostat Control Loop
    while True: 
-      # get schedule and setpoint
+      # get schedule
       schedule = t.get_schedule()
+
+      # get setpoint
       setpoint = t.get_schedule_setpoint()
       setpoint_str = f'{setpoint} F'
 
@@ -96,10 +98,10 @@ if __name__ == '__main__':
       # t.update_setpoint(setpoint)
 
 
-      # TODO get current system mode
-      # TODO build in logic to read from schedule.json through thermostat.py
+      # get system and fan mode
       system = t.get_system()
       fan_mode = t.get_fan()
+      print(f'System: {system} Fan: {fan_mode}')
 
       # write current temp & setpoint to 16x2 LCD
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
