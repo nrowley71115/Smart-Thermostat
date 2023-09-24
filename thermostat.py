@@ -1,65 +1,81 @@
 import json
 from datetime import datetime, timedelta
-# TODO import all rspi elements here
 
 SETPOINT_JSON_PATH = 'options/setpoint.json'
+TEMPERATURE_JSON_PATH = 'options/curr_temp.json'
 SCHEDULE_JSON_PATH = 'options/schedule.json'
+SYSTEM_JSON_PATH = 'options/system.json'
 
 class Thermostat():
     def __init__(self):
         self.setpoint_f = 0
-        self.humidity = 0
         self.max_setpoint = 85
         self.min_setpoint = 55
-
-        # TODO set GPIO pins here
+        self.deadband = 1
     
-    def get_temp_hum(self):
-        #TODO work with rpi to read DH22
-
-        # update temp and humidity
-
-        # return two values
-        pass
-
-    def set_setpoint(self, new_temperature):
-        data = {"setpoint": new_temperature}
-        with open(SETPOINT_JSON_PATH, 'w') as json_file:
+    def update_temp(self, new_temp):
+        """ Update the current temperature in curr_temp.json """
+        data = {"temperature": new_temp}
+        with open(TEMPERATURE_JSON_PATH, 'w') as json_file:
             json.dump(data, json_file)
 
-    def get_setpoint(self):
-        with open(SETPOINT_JSON_PATH, 'r') as json_file:
-            data = json.load(json_file)
-        return data["setpoint"]
 
+    def set_schedule_mode(self, mode):
+        """ Set the schedule mode to ON or OFF in system.json """
+        mode_options = ['ON', 'OFF']
+
+        if mode.upper() in mode_options:
+            with open(SYSTEM_JSON_PATH, 'r') as json_file:
+                data = json.load(json_file)
+            
+            data['scheulde'] = mode.upper()
+
+            with open(SYSTEM_JSON_PATH, 'w') as json_file:
+                json.dump(data, json_file)
 
     def set_system(self, mode):
-        if mode.upper() == 'ON':
-            pass
-        elif mode.upper() == 'AUTO':
-            pass
-        elif mode.upper() == 'OFF':
-            pass
-        else:
-            return 'error'
+        """ Set the system mode to AC, HEAT, or OFF in system.json """
+        mode_options = ['AC', 'HEAT', 'OFF']
+
+        if mode.upper() in mode_options:
+            with open(SYSTEM_JSON_PATH, 'r') as json_file:
+                data = json.load(json_file)
+            
+            data['system'] = mode.upper()
+
+            with open(SYSTEM_JSON_PATH, 'w') as json_file:
+                json.dump(data, json_file)
     
     def set_fan(self, mode):
-        if mode.upper() == 'ON':
-            pass
-        elif mode.upper() == 'AUTO':
-            pass
-        elif mode.upper() == 'OFF':
-            pass
-        else:
-            return 'error'
-    
-    def set_schedule(self, mode):
-        if mode.upper() == 'ON':
-            pass
-        elif mode.upper() == 'OFF':
-            pass
-        else:
-            return 'error'
+        """ Set the fan_mode to ON, OFF, or AUTO in system.json """
+        mode_options = ['ON', 'OFF', 'AUTO']
+
+        if mode.upper() in mode_options:
+            with open(SYSTEM_JSON_PATH, 'r') as json_file:
+                data = json.load(json_file)
+            
+            data['fan_mode'] = mode.upper()
+
+            with open(SYSTEM_JSON_PATH, 'w') as json_file:
+                json.dump(data, json_file)
+
+    def get_schedule_mode(self):
+        """ Return the schedule mode from system.json """
+        with open(SYSTEM_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        return data["schedule"]
+
+    def get_system(self):
+        """ Return the system mode from system.json """
+        with open(SYSTEM_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        return data["system"]
+
+    def get_fan(self):
+        """ Return the fan mode from system.json """
+        with open(SYSTEM_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        return data["fan_mode"]
 
 
     def get_rounded_time(self):
@@ -137,6 +153,7 @@ class Thermostat():
         
         return military_time_str
 
+
     def get_schedule(self):
         """ Return the schedule as a dictionary """
         # Load the schedule json file
@@ -144,8 +161,20 @@ class Thermostat():
             data = json.load(json_file)
         return data
 
+    def set_setpoint(self, new_temperature):
+        """ Set the setpoint to the new temperature in schedule.json """
+        data = {"setpoint": new_temperature}
+        with open(SETPOINT_JSON_PATH, 'w') as json_file:
+            json.dump(data, json_file)
+
+    def get_setpoint(self):
+        """ Return the setpoint from schedule.json """
+        with open(SETPOINT_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        return data["setpoint"]
+
     def get_schedule_setpoint(self):
-        """ Return the setpoint for the current time """
+        """ Return the setpoint for the current time from schedule.json"""
         # Load the schedule json file
         with open(SCHEDULE_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
@@ -214,5 +243,18 @@ class Thermostat():
 if __name__ == '__main__':    
     t = Thermostat()
 
-    setpoint = t.get_schedule_setpoint()
-    print(f'Setpoint: {setpoint}')
+    fan_mode = t.get_fan()
+    system = t.get_system()
+    schedule_mode = t.get_schedule_mode()
+
+    print(f'Fan Mode: {fan_mode}')
+    print(f'System: {system}')
+    print(f'Schedule Mode: {schedule_mode}')
+
+    t.set_fan('ON')
+    t.set_system('AC')
+    t.set_schedule_mode('ON')
+
+    print(f'Fan Mode: {t.get_fan()}')
+    print(f'System: {t.get_system()}')
+    print(f'Schedule Mode: {t.get_schedule_mode()}')

@@ -13,15 +13,32 @@ from rpi_lcd import LCD
 # FOR RELAY
 import RPi.GPIO as GPIO
 
-
-def init_relays():
-   # Initialize Relays
-   GPIO.setmode(GPIO.BCM)
-   pin_list = [4, 17, 27, 22]
-
-   for pin in pin_list:
-      GPIO.setup(pin, GPIO.OUT)
+def ac(pin, state):
+   if state == 'ON':
+      GPIO.output(pin, GPIO.LOW)
+   elif state == 'OFF':
       GPIO.output(pin, GPIO.HIGH)
+   else:
+      print("Invalid state for AC")
+      return
+
+def heat(pin, state):
+   if state == 'ON':
+      GPIO.output(pin, GPIO.LOW)
+   elif state == 'OFF':
+      GPIO.output(pin, GPIO.HIGH)
+   else:
+      print("Invalid state for Heat")
+      return
+
+def fan(pin, state):
+   if state == 'ON':
+      GPIO.output(pin, GPIO.LOW)
+   elif state == 'OFF':
+      GPIO.output(pin, GPIO.HIGH)
+   else:
+      print("Invalid state for Fan")
+      return
 
 
 if __name__ == '__main__':
@@ -39,8 +56,13 @@ if __name__ == '__main__':
    signal(SIGTERM, safe_exit)
    signal(SIGHUP, safe_exit)
    
-   # Initalize Relays
-   init_relays()
+   # Initialize Relays
+   GPIO.setmode(GPIO.BCM)
+   PIN_LIST = {'spare': 4, 'ac': 17, 'heat': 27, 'fan': 22}
+
+   for sys, pin in PIN_LIST.items():
+      GPIO.setup(pin, GPIO.OUT)
+      GPIO.output(pin, GPIO.HIGH)
    
    # Thermostat Control Loop
    while True: 
@@ -55,6 +77,8 @@ if __name__ == '__main__':
          temperature_f = round(temperature_c * (9/5) + 32, 1)
          temperature_f_str = f'{temperature_f} F'
          humidity = dhtDevice.humidity
+         # Save to curr_temp.json file
+         t.update_temp(temperature_f)
       except RuntimeError as error:
          # print(error.args[0])
          print("DHT error")
@@ -73,20 +97,50 @@ if __name__ == '__main__':
 
 
       # TODO get current system mode
-      # TODO build json for modes
-      ac_mode = "N"
-      fan_mode = "F"
-      heat_mode = "A"
+      # TODO build in logic to read from schedule.json through thermostat.py
+      system = t.get_system()
+      fan_mode = t.get_fan()
 
       # write current temp & setpoint to 16x2 LCD
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
-      lcd.text(f"AC:{ac_mode} FAN:{fan_mode} HT:{heat_mode}", 2)
+      lcd.text(f"SYS:{system} FAN:{fan_mode}", 2)
 
+      # control the thermostat - ie relays on or off
+      # Too Cold
+      if temperature_f < (setpoint-t.deadband):
+         # AC off
+         if system == 'AC':
+            ac(PIN_LIST['ac'], 'OFF')
 
-      # TODO control the thermostat - ie relays on or off
-      # 
-      if ac_mode and temperature_f < setpoint - t.deadband:
-         pass
+            # Fan off if Auto
+            if fan_mode == 'A':
+               fan(PIN_LIST['fan'], 'OFF')
 
+         # Heat off
+         elif system == 'HEAT':
+            heat(PIN_LIST['heat'], 'ON')
+
+            # Fan on if Auto
+            if fan_mode == 'A':
+               fan(PIN_LIST['fan'], 'ON')
+
+      # Too Hot 
+      elif temperature_f > (setpoint+t.deadband):
+         # AC on
+         if system == 'AC':
+            ac(PIN_LIST['ac'], 'ON')
+
+            # Fan on if Auto
+            if fan_mode == 'A':
+               fan(PIN_LIST['fan'], 'ON')
+
+         # Heat off
+         elif system == 'HEAT':
+            heat(PIN_LIST['heat'], 'OFF')
+
+            # Fan off if Auto
+            if fan_mode == 'A':
+               fan(PIN_LIST['fan'], 'OFF')
+      
       sleep(2)
-      print("Thermostat running")
+      print(".")
