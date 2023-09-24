@@ -8,7 +8,6 @@ SYSTEM_JSON_PATH = 'options/system.json'
 
 class Thermostat():
     def __init__(self):
-        self.setpoint_f = 0
         self.max_setpoint = 85
         self.min_setpoint = 55
         self.deadband = 1
@@ -28,7 +27,7 @@ class Thermostat():
             with open(SYSTEM_JSON_PATH, 'r') as json_file:
                 data = json.load(json_file)
             
-            data['scheulde'] = mode.upper()
+            data['schedule'] = mode.upper()
 
             with open(SYSTEM_JSON_PATH, 'w') as json_file:
                 json.dump(data, json_file)
@@ -162,7 +161,8 @@ class Thermostat():
         return data
 
     def set_setpoint(self, new_temperature):
-        """ Set the setpoint to the new temperature in schedule.json """
+        """ Set the setpoint to the new temperature in setpoint.json
+        Input: new_temperature as an integer """
         data = {"setpoint": new_temperature}
         with open(SETPOINT_JSON_PATH, 'w') as json_file:
             json.dump(data, json_file)
