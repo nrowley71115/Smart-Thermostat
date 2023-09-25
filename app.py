@@ -8,16 +8,58 @@ TIMES = ["12:00AM", "12:30AM", "1:00AM", "1:30AM", "2:00AM", "2:30AM", "3:00AM",
          "2:00PM", "2:30PM", "3:00PM", "3:30PM", "4:00PM", "4:30PM", "5:00PM",
          "5:30PM", "6:00PM", "6:30PM", "7:00PM", "7:30PM", "8:00PM", "8:30PM",
          "9:00PM", "9:30PM", "10:00PM", "10:30PM", "11:00PM", "11:30PM"]
+SETPOINT_OPTIONS = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
+                    71, 72, 73, 74, 75, 76, 77, 78, 79, 80]
+SYSTEM_MODES = ["OFF", "HEAT", "AC"]
+FAN_MODES = ["AUTO", "ON", "OFF"]
+SCHEDULE_MODES = ["ON", "OFF"]
 
 app = Flask(__name__)
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+    # initalize thermostat
+    thermostat = Thermostat()
+
     if request.method == 'POST':
-        return "update temperautre"
+        # get new setpoint, system mode, fan mode, and schedule mode from form
+        new_setpoint = int(request.form['setpointTemperature'])
+        system_mode = request.form['system'].upper()
+        fan_mode = request.form['fan'].upper()
+        schedule_mode = request.form['schedule'].upper()
+        
+        # validate new_setpoint
+        if new_setpoint not in SETPOINT_OPTIONS:
+            return "Invalid setpoint"
+        
+        # validate system_mode
+        if system_mode not in SYSTEM_MODES:
+            return "Invalid system mode"
+        
+        # validate fan_mode
+        if fan_mode not in FAN_MODES:
+            return "Invalid fan mode"
+        
+        # validate schedule_mode
+        if schedule_mode not in SCHEDULE_MODES:
+            return "Invalid schedule mode"
+        
+        # update setpiont and system mode in json file via Thermostat()
+        thermostat.set_setpoint(new_setpoint)
+        thermostat.set_system(system_mode)
+        thermostat.set_fan(fan_mode)
+        thermostat.set_schedule_mode(schedule_mode)
+
+        print('system.json & setpoint.json updated')
+        print(f'Setpoint: {new_setpoint} System: {system_mode} Fan: {fan_mode} Schedule: {schedule_mode}')
+
+        return redirect("/")
     
     # TODO get current temp and pass to index
-    return render_template("index.html")
+    # TODO send to index.html
+
+    return render_template("index.html", setpoint=thermostat.get_setpoint(), system=thermostat.get_system(),
+                           fan=thermostat.get_fan(), schedule=thermostat.get_schedule_mode())
 
 
 @app.route("/statistics")
