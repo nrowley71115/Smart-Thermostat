@@ -11,7 +11,6 @@ TIMES = ["12:00AM", "12:30AM", "1:00AM", "1:30AM", "2:00AM", "2:30AM", "3:00AM",
 
 app = Flask(__name__)
 
-
 @app.route("/", methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -71,3 +70,6 @@ def schedule():
             schedule[time] = setpoint
 
         return render_template("schedule.html", schedule=schedule, times=TIMES)
+    
+if __name__ == '__main__':
+    app.run(debug=True, host='192.168.88.229')
