@@ -129,6 +129,7 @@ if __name__ == '__main__':
       elif system == 'OFF':
          ac(PIN_LIST['ac'], 'OFF')
          heat(PIN_LIST['heat'], 'OFF')
+         fan(PIN_LIST['fan'], 'OFF')
 
       # Fan relay control
       if fan_mode == 'ON':
