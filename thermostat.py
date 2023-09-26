@@ -18,6 +18,11 @@ class Thermostat():
         with open(TEMPERATURE_JSON_PATH, 'w') as json_file:
             json.dump(data, json_file)
 
+    def get_temp(self):
+        """ Return the current temperature from curr_temp.json """
+        with open(TEMPERATURE_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        return data["temperature"]
 
     def set_schedule_mode(self, mode):
         """ Set the schedule mode to ON or OFF in system.json """

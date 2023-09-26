@@ -26,15 +26,20 @@ def index():
         system_mode = request.form['system'].upper()
         fan_mode = request.form['fan'].upper()
         schedule_mode = request.form['schedule'].upper()
-        if schedule_mode == "ON":
-            new_setpoint = int(request.form['setpointTemperature'])
         
-            # validate new_setpoint
-            if new_setpoint not in SETPOINT_OPTIONS:
-                return "Invalid setpoint"
-            
-            # update setpoint in json file via Thermostat()
-            thermostat.set_setpoint(new_setpoint)
+        try:
+            setpoint = request.form['setpointTemperature']
+            if setpoint:
+                new_setpoint = int(setpoint)
+                # validate new_setpoint
+                if new_setpoint not in SETPOINT_OPTIONS:
+                    return "Invalid setpoint"
+                # update setpoint in json file via Thermostat()
+                thermostat.set_setpoint(new_setpoint)
+        except (ValueError, KeyError):
+            # new_setpoint was not entered or is not a valid integer
+            pass
+
 
         # validate system_mode
         if system_mode not in SYSTEM_MODES:
@@ -58,8 +63,10 @@ def index():
     # TODO get current temp and pass to index
     # TODO send to index.html
 
-    return render_template("index.html", setpoint=thermostat.get_setpoint(), schedule_setpoint=thermostat.get_schedule_setpoint(), 
-                            system=thermostat.get_system(), fan=thermostat.get_fan(), schedule=thermostat.get_schedule_mode())
+    return render_template("index.html", setpoint=thermostat.get_setpoint(), 
+                           schedule_setpoint=thermostat.get_schedule_setpoint(), system=thermostat.get_system(),
+                            fan=thermostat.get_fan(), schedule=thermostat.get_schedule_mode(),
+                            curr_temp=thermostat.get_temp())
 
 
 @app.route("/statistics")
