@@ -23,15 +23,19 @@ def index():
 
     if request.method == 'POST':
         # get new setpoint, system mode, fan mode, and schedule mode from form
-        new_setpoint = int(request.form['setpointTemperature'])
         system_mode = request.form['system'].upper()
         fan_mode = request.form['fan'].upper()
         schedule_mode = request.form['schedule'].upper()
+        if schedule_mode == "ON":
+            new_setpoint = int(request.form['setpointTemperature'])
         
-        # validate new_setpoint
-        if new_setpoint not in SETPOINT_OPTIONS:
-            return "Invalid setpoint"
-        
+            # validate new_setpoint
+            if new_setpoint not in SETPOINT_OPTIONS:
+                return "Invalid setpoint"
+            
+            # update setpoint in json file via Thermostat()
+            thermostat.set_setpoint(new_setpoint)
+
         # validate system_mode
         if system_mode not in SYSTEM_MODES:
             return "Invalid system mode"
@@ -44,8 +48,7 @@ def index():
         if schedule_mode not in SCHEDULE_MODES:
             return "Invalid schedule mode"
         
-        # update setpiont and system mode in json file via Thermostat()
-        thermostat.set_setpoint(new_setpoint)
+        # update system mode in json file via Thermostat()
         thermostat.set_system(system_mode)
         thermostat.set_fan(fan_mode)
         thermostat.set_schedule_mode(schedule_mode)
@@ -58,8 +61,8 @@ def index():
     # TODO get current temp and pass to index
     # TODO send to index.html
 
-    return render_template("index.html", setpoint=thermostat.get_setpoint(), system=thermostat.get_system(),
-                           fan=thermostat.get_fan(), schedule=thermostat.get_schedule_mode())
+    return render_template("index.html", setpoint=thermostat.get_setpoint(), schedule_setpoint=thermostat.get_schedule_setpoint(), 
+                            system=thermostat.get_system(), fan=thermostat.get_fan(), schedule=thermostat.get_schedule_mode())
 
 
 @app.route("/statistics")
