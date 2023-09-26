@@ -49,6 +49,7 @@ if __name__ == '__main__':
    
    # Initialize 16x2 LCD Display
    lcd = LCD()
+   lcd_counter = 0
 
    def safe_exit(signum, frame):
       exit(1)
@@ -67,10 +68,17 @@ if __name__ == '__main__':
    # Thermostat Control Loop
    while True: 
       # get schedule
+      schedule_mode = t.get_schedule_mode().upper()
       schedule = t.get_schedule()
 
-      # get setpoint
-      setpoint = t.get_schedule_setpoint()
+      # get setpoint according to schedule mode setting
+      if schedule_mode == 'ON':
+         setpoint = t.get_schedule_setpoint()
+      elif schedule_mode == 'OFF':
+         setpoint = t.get_setpoint()
+      else:
+         print("Invalid schedule mode")
+         continue
       setpoint_str = f'{setpoint} F'
 
       # get current temp & humidity
@@ -100,14 +108,34 @@ if __name__ == '__main__':
 
       # get system and fan mode
       system = t.get_system()
-      fan_mode = t.get_fan()
+      fan_mode = t.get_fan().upper()
       print(f'System: {system} Fan: {fan_mode}')
+
 
       # write current temp & setpoint to 16x2 LCD
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
-      lcd.text(f"SYS:{system} FAN:{fan_mode}", 2)
+      if lcd_counter == 0:
+         lcd.text(f"SYS:{system} FAN:{fan_mode}", 2)
+         lcd_counter = 1
+      else:
+         lcd.text(f"SCH:{schedule_mode}", 2)
+         lcd_counter = 0
+      
+      # ensure opposing system relay is off
+      if system == 'AC':
+         ac(PIN_LIST['heat'], 'OFF')
+      elif system == 'HEAT':
+         heat(PIN_LIST['ac'], 'OFF')
+      elif system == 'OFF':
+         ac(PIN_LIST['ac'], 'OFF')
+         heat(PIN_LIST['heat'], 'OFF')
 
-      # control the thermostat - ie relays on or off
+      # Fan relay control
+      if fan_mode == 'ON':
+         fan(PIN_LIST['fan'], 'ON')
+      elif fan_mode == 'OFF':
+         fan(PIN_LIST['fan'], 'OFF')
+
       # Too Cold
       if temperature_f < (setpoint-t.deadband):
          # AC off
@@ -115,15 +143,15 @@ if __name__ == '__main__':
             ac(PIN_LIST['ac'], 'OFF')
 
             # Fan off if Auto
-            if fan_mode == 'A':
+            if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
 
-         # Heat off
+         # Heat on
          elif system == 'HEAT':
             heat(PIN_LIST['heat'], 'ON')
 
             # Fan on if Auto
-            if fan_mode == 'A':
+            if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'ON')
 
       # Too Hot 
@@ -133,7 +161,7 @@ if __name__ == '__main__':
             ac(PIN_LIST['ac'], 'ON')
 
             # Fan on if Auto
-            if fan_mode == 'A':
+            if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'ON')
 
          # Heat off
@@ -141,7 +169,7 @@ if __name__ == '__main__':
             heat(PIN_LIST['heat'], 'OFF')
 
             # Fan off if Auto
-            if fan_mode == 'A':
+            if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
       
       sleep(2)

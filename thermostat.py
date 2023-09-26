@@ -62,7 +62,7 @@ class Thermostat():
         """ Return the schedule mode from system.json """
         with open(SYSTEM_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
-        return data["schedule"]
+        return data["schedule"].upper()
 
     def get_system(self):
         """ Return the system mode from system.json """
@@ -74,7 +74,7 @@ class Thermostat():
         """ Return the fan mode from system.json """
         with open(SYSTEM_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
-        return data["fan_mode"]
+        return data["fan_mode"].upper()
 
 
     def get_rounded_time(self):
