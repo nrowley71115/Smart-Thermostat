@@ -66,7 +66,7 @@ def index():
     return render_template("index.html", setpoint=thermostat.get_setpoint(), 
                            schedule_setpoint=thermostat.get_schedule_setpoint(), system=thermostat.get_system(),
                             fan=thermostat.get_fan(), schedule=thermostat.get_schedule_mode(),
-                            curr_temp=thermostat.get_temp())
+                            curr_temp=thermostat.get_temp(), humidity=thermostat.get_humidity())
 
 
 @app.route("/statistics")

@@ -89,6 +89,7 @@ if __name__ == '__main__':
          humidity = dhtDevice.humidity
          # Save to curr_temp.json file
          t.update_temp(temperature_f)
+         t.update_humidity(humidity)
       except RuntimeError as error:
          # print(error.args[0])
          print("DHT error")

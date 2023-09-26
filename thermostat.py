@@ -5,6 +5,7 @@ SETPOINT_JSON_PATH = 'options/setpoint.json'
 TEMPERATURE_JSON_PATH = 'options/curr_temp.json'
 SCHEDULE_JSON_PATH = 'options/schedule.json'
 SYSTEM_JSON_PATH = 'options/system.json'
+HUMIDITY_JSON_PATH = 'options/humidity.json'
 
 class Thermostat():
     def __init__(self):
@@ -23,6 +24,18 @@ class Thermostat():
         with open(TEMPERATURE_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
         return data["temperature"]
+
+    def update_humidity(self, new_humidity):
+        """ Update the current humidity (%) in humidity.json """
+        data = {"humidity": new_humidity}
+        with open(HUMIDITY_JSON_PATH, 'w') as json_file:
+            json.dump(data, json_file)
+
+    def get_humidity(self):
+        """ Return the current humidity (%) from humidity.json """
+        with open(HUMIDITY_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        return data["humidity"]
 
     def set_schedule_mode(self, mode):
         """ Set the schedule mode to ON or OFF in system.json """
