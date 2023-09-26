@@ -54,9 +54,6 @@ def index():
         thermostat.set_fan(fan_mode)
         thermostat.set_schedule_mode(schedule_mode)
 
-        print('system.json & setpoint.json updated')
-        print(f'Setpoint: {new_setpoint} System: {system_mode} Fan: {fan_mode} Schedule: {schedule_mode}')
-
         return redirect("/")
     
     # TODO get current temp and pass to index
