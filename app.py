@@ -16,7 +16,6 @@ SCHEDULE_MODES = ["ON", "OFF"]
 
 app = Flask(__name__)
 
-
 @app.route("/", methods=['GET', 'POST'])
 def index():
     # initalize thermostat
@@ -113,3 +112,6 @@ def schedule():
             schedule[time] = setpoint
 
         return render_template("schedule.html", schedule=schedule, times=TIMES)
+    
+if __name__ == '__main__':
+    app.run(debug=True, host='192.168.88.229')
