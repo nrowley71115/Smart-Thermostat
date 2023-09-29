@@ -119,7 +119,7 @@ if __name__ == '__main__':
          lcd.text(f"SYS:{system} FAN:{fan_mode}", 2)
          lcd_counter = 1
       else:
-         lcd.text(f"SCH:{schedule_mode}", 2)
+         lcd.text(f"    SCH:{schedule_mode}", 2)
          lcd_counter = 0
       
       # ensure opposing system relay is off
