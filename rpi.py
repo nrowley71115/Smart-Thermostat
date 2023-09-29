@@ -51,7 +51,7 @@ if __name__ == '__main__':
    
    # Initialize 16x2 LCD Display
    lcd = LCD()
-   lcd_counter = 0
+   lcd_counter = 1
    lcd_timer = 2
 
    def safe_exit(signum, frame):
@@ -135,16 +135,15 @@ if __name__ == '__main__':
 
 
       # write current temp & setpoint to 16x2 LCD
-      print(lcd_counter)
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
-      if lcd_counter < lcd_timer:
+      if lcd_counter <= lcd_timer:
          lcd.text(f"SYS:{system} FAN:{fan_mode}", 2)
          lcd_counter += 1
       else:
          lcd.text(f"    SCH:{schedule_mode}", 2)
          # reset lcd counter and itterate counter accordingly
          if lcd_counter >= 2*lcd_timer:
-            lcd_counter = 0
+            lcd_counter = 1
          else:
             lcd_counter += 1
       
