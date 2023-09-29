@@ -112,23 +112,17 @@ if __name__ == '__main__':
 
 
       # TODO check for button input
-      if GPIO.input(PIN_LIST['system_button']) == GPIO.HIGH:
+      if GPIO.input(PIN_LIST['system_button']) == GPIO.LOW:
          print("System Button Pressed")
-      if GPIO.input(PIN_LIST['fan_button']) == GPIO.HIGH:
+      if GPIO.input(PIN_LIST['fan_button']) == GPIO.LOW:
          print("Fan Button Pressed")
-      if GPIO.input(PIN_LIST['schedule_button']) == GPIO.HIGH:
+      if GPIO.input(PIN_LIST['schedule_button']) == GPIO.LOW:
          print("Schedule Button Pressed")
-      if GPIO.input(PIN_LIST['up_button']) == GPIO.HIGH:
+      if GPIO.input(PIN_LIST['up_button']) == GPIO.LOW:
          print("Up Button Pressed")
-      if GPIO.input(PIN_LIST['down_button']) == GPIO.HIGH:
+      if GPIO.input(PIN_LIST['down_button']) == GPIO.LOW:
          print("Down Button Pressed")
       
-      print(f"SYSTEM BUTTON: {GPIO.input(PIN_LIST['system_button'])}")
-      print(f"FAN BUTTON: {GPIO.input(PIN_LIST['fan_button'])}")
-      print(f"SCHEDULE BUTTON: {GPIO.input(PIN_LIST['schedule_button'])}")
-      print(f"UP BUTTON: {GPIO.input(PIN_LIST['up_button'])}")
-      print(f"DOWN BUTTON: {GPIO.input(PIN_LIST['down_button'])}")
-
 
       # TODO update setpoint if necessary
       # t.update_setpoint(setpoint)
