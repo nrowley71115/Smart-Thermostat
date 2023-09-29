@@ -139,11 +139,13 @@ if __name__ == '__main__':
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
       if lcd_counter < lcd_timer:
          lcd.text(f"SYS:{system} FAN:{fan_mode}", 2)
+         lcd_counter += 1
       else:
          lcd.text(f"    SCH:{schedule_mode}", 2)
          # reset lcd counter
          if lcd_counter >= 2*lcd_timer:
             lcd_counter = 0
+         lcd_counter += 1
       
       # ensure opposing system relay is off
       if system == 'AC':
@@ -195,6 +197,6 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
       
-      lcd_counter += 1
+
       sleep(1)
       print(".")
