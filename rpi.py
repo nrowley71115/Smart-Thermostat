@@ -43,6 +43,11 @@ def fan(pin, state):
 
 if __name__ == '__main__':
    t = Thermostat()
+
+   # GLOBAL VARIABLES
+   SYSTEM_OPTIONS = ['AC', 'HEAT', 'OFF']
+   FAN_OPTIONS = ['ON', 'AUTO']
+   SCHEDULE_OPTIONS = ['ON', 'OFF']
    PIN_LIST = {'spare': 4, 'ac': 17, 'heat': 27, 'fan': 22, 
                'system_button': 13, 'fan_button': 6, 'schedule_button': 5 , 'up_button': 23, 'down_button': 24}
    
@@ -114,13 +119,36 @@ if __name__ == '__main__':
       # TODO check for button input
       if GPIO.input(PIN_LIST['system_button']) == GPIO.LOW:
          print("System Button Pressed")
+         sys_old = t.get_system()
+         index = SYSTEM_OPTIONS.index(sys_old)
+         if index == 2:
+            index = 0
+         else:
+            index += 1
+         t.set_system(SYSTEM_OPTIONS[index])
+         print(f'System changed from {sys_old} to {SYSTEM_OPTIONS[index]}')
       if GPIO.input(PIN_LIST['fan_button']) == GPIO.LOW:
          print("Fan Button Pressed")
+         fan_old = t.get_fan()
+         index = FAN_OPTIONS.index(fan_old)
+         if index == 1:
+            index = 0
+         else:
+            index += 1
+         t.set_fan(FAN_OPTIONS[index])
       if GPIO.input(PIN_LIST['schedule_button']) == GPIO.LOW:
          print("Schedule Button Pressed")
+         schedule_old = t.get_schedule_mode()
+         index = SCHEDULE_OPTIONS.index(schedule_old)
+         if index == 1:
+            index = 0
+         else:
+            index += 1
+         t.set_schedule_mode(SCHEDULE_OPTIONS[index])
+         
       if GPIO.input(PIN_LIST['up_button']) == GPIO.LOW:
          print("Up Button Pressed")
-      if GPIO.input(PIN_LIST['down_button']) == GPIO.LOW:
+      elif GPIO.input(PIN_LIST['down_button']) == GPIO.LOW:
          print("Down Button Pressed")
       
 
