@@ -43,6 +43,8 @@ def fan(pin, state):
 
 if __name__ == '__main__':
    t = Thermostat()
+   PIN_LIST = {'spare': 4, 'ac': 17, 'heat': 27, 'fan': 22, 
+               'system_button': 13, 'fan_button': 6, 'schedule_button': 5 , 'up_button': 23, 'down_button': 24}
    
    # Initialize DHT22
    dhtDevice = adafruit_dht.DHT22(board.D16, use_pulseio=False)
@@ -50,6 +52,7 @@ if __name__ == '__main__':
    # Initialize 16x2 LCD Display
    lcd = LCD()
    lcd_counter = 0
+   lcd_timer = 2
 
    def safe_exit(signum, frame):
       exit(1)
@@ -59,12 +62,21 @@ if __name__ == '__main__':
    
    # Initialize Relays
    GPIO.setmode(GPIO.BCM)
-   PIN_LIST = {'spare': 4, 'ac': 17, 'heat': 27, 'fan': 22}
 
-   for sys, pin in PIN_LIST.items():
-      GPIO.setup(pin, GPIO.OUT)
-      GPIO.output(pin, GPIO.HIGH)
+   GPIO.setup(PIN_LIST['ac'], GPIO.OUT)
+   GPIO.output(PIN_LIST['ac'], GPIO.HIGH)
+   GPIO.setup(PIN_LIST['heat'], GPIO.OUT)
+   GPIO.output(PIN_LIST['heat'], GPIO.HIGH)
+   GPIO.setup(PIN_LIST['fan'], GPIO.OUT)
+   GPIO.output(PIN_LIST['fan'], GPIO.HIGH)
    
+   # Initialize Buttons
+   GPIO.setup(PIN_LIST['system_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+   GPIO.setup(PIN_LIST['fan_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+   GPIO.setup(PIN_LIST['schedule_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+   GPIO.setup(PIN_LIST['up_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+   GPIO.setup(PIN_LIST['down_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
    # Thermostat Control Loop
    while True: 
       # get schedule
@@ -101,6 +113,16 @@ if __name__ == '__main__':
 
 
       # TODO check for button input
+      if GPIO.input(PIN_LIST['system_button']) == GPIO.LOW:
+         print("System Button Pressed")
+      if GPIO.input(PIN_LIST['fan_button']) == GPIO.LOW:
+         print("Fan Button Pressed")
+      if GPIO.input(PIN_LIST['schedule_button']) == GPIO.LOW:
+         print("Schedule Button Pressed")
+      if GPIO.input(PIN_LIST['up_button']) == GPIO.LOW:
+         print("Up Button Pressed")
+      if GPIO.input(PIN_LIST['down_button']) == GPIO.LOW:
+         print("Down Button Pressed")
 
 
       # TODO update setpoint if necessary
@@ -115,12 +137,13 @@ if __name__ == '__main__':
 
       # write current temp & setpoint to 16x2 LCD
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
-      if lcd_counter == 0:
+      if lcd_counter < lcd_timer:
          lcd.text(f"SYS:{system} FAN:{fan_mode}", 2)
-         lcd_counter = 1
       else:
-         lcd.text(f"SCH:{schedule_mode}", 2)
-         lcd_counter = 0
+         lcd.text(f"    SCH:{schedule_mode}", 2)
+         # reset lcd counter
+         if lcd_counter > 2*lcd_timer:
+            lcd_counter = 0
       
       # ensure opposing system relay is off
       if system == 'AC':
@@ -135,8 +158,6 @@ if __name__ == '__main__':
       # Fan relay control
       if fan_mode == 'ON':
          fan(PIN_LIST['fan'], 'ON')
-      elif fan_mode == 'OFF':
-         fan(PIN_LIST['fan'], 'OFF')
 
       # Too Cold
       if temperature_f < (setpoint-t.deadband):
@@ -174,5 +195,6 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
       
-      sleep(2)
+      lcd_counter += 1
+      sleep(1)
       print(".")

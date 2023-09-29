@@ -64,8 +64,8 @@ class Thermostat():
                 json.dump(data, json_file)
     
     def set_fan(self, mode):
-        """ Set the fan_mode to ON, OFF, or AUTO in system.json """
-        mode_options = ['ON', 'OFF', 'AUTO']
+        """ Set the fan_mode to ON or AUTO in system.json """
+        mode_options = ['ON', 'AUTO']
 
         if mode.upper() in mode_options:
             with open(SYSTEM_JSON_PATH, 'r') as json_file:
@@ -133,7 +133,9 @@ class Thermostat():
         minute = int(time_str[2:])
 
         # Convert to standard time format
-        if hour >= 13:
+        if hour == 12:
+            am_pm = "PM"
+        elif hour >= 13:
             hour -= 12
             am_pm = "PM"
         elif hour == 0:
@@ -186,7 +188,7 @@ class Thermostat():
             json.dump(data, json_file)
 
     def get_setpoint(self):
-        """ Return the setpoint from schedule.json """
+        """ Return the setpoint from setpoint.json """
         with open(SETPOINT_JSON_PATH, 'r') as json_file:
             data = json.load(json_file)
         return data["setpoint"]
@@ -211,9 +213,15 @@ class Thermostat():
         Example input: "12:30 PM", "2:30 PM", 75
         Output: update the schedule.json file
         """
+
         # format the start and end times in military time (24 hour clock)
         start_time = self.convert_to_military_time(start_time)
         end_time = self.convert_to_military_time(end_time)
+
+        # if end_time is before start_time, return error
+        if start_time > end_time:
+            print("Error: end_time is before start_time")
+            return
         
         # Load the schedule json file
         with open(SCHEDULE_JSON_PATH, 'r') as json_file:
@@ -261,18 +269,10 @@ class Thermostat():
 if __name__ == '__main__':    
     t = Thermostat()
 
-    fan_mode = t.get_fan()
-    system = t.get_system()
-    schedule_mode = t.get_schedule_mode()
+    # test schedule for midnight and noon
+    # print(t.get_schedule())
+    # t.update_schedule("12:00 PM", "11:00 AM", 72)
+    # print("")
+    # print(t.get_schedule())
 
-    print(f'Fan Mode: {fan_mode}')
-    print(f'System: {system}')
-    print(f'Schedule Mode: {schedule_mode}')
-
-    t.set_fan('ON')
-    t.set_system('AC')
-    t.set_schedule_mode('ON')
-
-    print(f'Fan Mode: {t.get_fan()}')
-    print(f'System: {t.get_system()}')
-    print(f'Schedule Mode: {t.get_schedule_mode()}')
+    print(t.convert_to_standard_time("0000"))

@@ -11,7 +11,7 @@ TIMES = ["12:00AM", "12:30AM", "1:00AM", "1:30AM", "2:00AM", "2:30AM", "3:00AM",
 SETPOINT_OPTIONS = [55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
                     71, 72, 73, 74, 75, 76, 77, 78, 79, 80]
 SYSTEM_MODES = ["OFF", "HEAT", "AC"]
-FAN_MODES = ["AUTO", "ON", "OFF"]
+FAN_MODES = ["AUTO", "ON"]
 SCHEDULE_MODES = ["ON", "OFF"]
 
 app = Flask(__name__)
