@@ -135,8 +135,6 @@ if __name__ == '__main__':
       # Fan relay control
       if fan_mode == 'ON':
          fan(PIN_LIST['fan'], 'ON')
-      elif fan_mode == 'OFF':
-         fan(PIN_LIST['fan'], 'OFF')
 
       # Too Cold
       if temperature_f < (setpoint-t.deadband):

@@ -64,8 +64,8 @@ class Thermostat():
                 json.dump(data, json_file)
     
     def set_fan(self, mode):
-        """ Set the fan_mode to ON, OFF, or AUTO in system.json """
-        mode_options = ['ON', 'OFF', 'AUTO']
+        """ Set the fan_mode to ON or AUTO in system.json """
+        mode_options = ['ON', 'AUTO']
 
         if mode.upper() in mode_options:
             with open(SYSTEM_JSON_PATH, 'r') as json_file:
