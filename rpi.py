@@ -142,7 +142,7 @@ if __name__ == '__main__':
       else:
          lcd.text(f"    SCH:{schedule_mode}", 2)
          # reset lcd counter
-         if lcd_counter > 2*lcd_timer:
+         if lcd_counter >= 2*lcd_timer:
             lcd_counter = 0
       
       # ensure opposing system relay is off
