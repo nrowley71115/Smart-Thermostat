@@ -136,6 +136,7 @@ if __name__ == '__main__':
          else:
             index += 1
          t.set_fan(FAN_OPTIONS[index])
+         print(f'Fan changed from {fan_old} to {FAN_OPTIONS[index]}')
       if GPIO.input(PIN_LIST['schedule_button']) == GPIO.LOW:
          print("Schedule Button Pressed")
          schedule_old = t.get_schedule_mode()
@@ -145,6 +146,8 @@ if __name__ == '__main__':
          else:
             index += 1
          t.set_schedule_mode(SCHEDULE_OPTIONS[index])
+         print(f'Schedule changed from {schedule_old} to {SCHEDULE_OPTIONS[index]}')
+
          
       if GPIO.input(PIN_LIST['up_button']) == GPIO.LOW:
          print("Up Button Pressed")
