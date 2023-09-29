@@ -105,7 +105,6 @@ if __name__ == '__main__':
       except RuntimeError as error:
          # print(error.args[0])
          print("DHT error")
-         sleep(2)
          continue
       except Exception as error:
          dhtDevice.exit()
