@@ -116,9 +116,9 @@ if __name__ == '__main__':
          raise error
 
 
-      # TODO check for button input
+      # System button pressed
       if GPIO.input(PIN_LIST['system_button']) == GPIO.LOW:
-         print("System Button Pressed")
+         # change system mode from current to next in SYSTEM_OPTIONS
          sys_old = t.get_system()
          index = SYSTEM_OPTIONS.index(sys_old)
          if index == 2:
@@ -127,8 +127,10 @@ if __name__ == '__main__':
             index += 1
          t.set_system(SYSTEM_OPTIONS[index])
          print(f'System changed from {sys_old} to {SYSTEM_OPTIONS[index]}')
+      
+      # Fan button pressed
       if GPIO.input(PIN_LIST['fan_button']) == GPIO.LOW:
-         print("Fan Button Pressed")
+         # change fan mode from current to next in FAN_OPTIONS
          fan_old = t.get_fan()
          index = FAN_OPTIONS.index(fan_old)
          if index == 1:
@@ -137,8 +139,10 @@ if __name__ == '__main__':
             index += 1
          t.set_fan(FAN_OPTIONS[index])
          print(f'Fan changed from {fan_old} to {FAN_OPTIONS[index]}')
+
+      # Schedule button pressed
       if GPIO.input(PIN_LIST['schedule_button']) == GPIO.LOW:
-         print("Schedule Button Pressed")
+         # change schedule mode from current to next in SCHEDULE_OPTIONS
          schedule_old = t.get_schedule_mode()
          index = SCHEDULE_OPTIONS.index(schedule_old)
          if index == 1:
@@ -148,11 +152,19 @@ if __name__ == '__main__':
          t.set_schedule_mode(SCHEDULE_OPTIONS[index])
          print(f'Schedule changed from {schedule_old} to {SCHEDULE_OPTIONS[index]}')
 
-         
+
       if GPIO.input(PIN_LIST['up_button']) == GPIO.LOW:
          print("Up Button Pressed")
+         # set schedule mode to OFF
+         t.set_schedule_mode('OFF')
+         # increase setpoint by 1
+         t.set_setpoint(setpoint+1)
       elif GPIO.input(PIN_LIST['down_button']) == GPIO.LOW:
          print("Down Button Pressed")
+         # set schedule mode to OFF
+         t.set_schedule_mode('OFF')
+         # decrease setpoint by 1
+         t.set_setpoint(setpoint-1)
       
 
       # TODO update setpoint if necessary
