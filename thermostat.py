@@ -112,7 +112,9 @@ class Thermostat():
             rounded_minutes = 0
 
         # Convert military time to conventional
-        if hour >= 13:
+        if hour == 12:
+            am_pm = "PM"
+        elif hour >= 13:
             hour -= 12
             am_pm = "PM"
         else:
@@ -275,4 +277,6 @@ if __name__ == '__main__':
     # print("")
     # print(t.get_schedule())
 
-    print(t.convert_to_standard_time("0000"))
+    schedule_setpoint = t.get_schedule_setpoint()
+    print(f'Schedule setpoint: {schedule_setpoint}')
+    
