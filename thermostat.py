@@ -1,11 +1,16 @@
 import json
+import os
 from datetime import datetime, timedelta
 
-SETPOINT_JSON_PATH = 'Documents/options/setpoint.json'
-TEMPERATURE_JSON_PATH = 'Documents/options/curr_temp.json'
-SCHEDULE_JSON_PATH = 'Documents/options/schedule.json'
-SYSTEM_JSON_PATH = 'Documents/options/system.json'
-HUMIDITY_JSON_PATH = 'Documents/options/humidity.json'
+# Get the absolute path to the directory containg your script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+SETPOINT_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/setpoint.json')
+TEMPERATURE_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/curr_temp.json')
+SCHEDULE_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/schedule.json')
+SYSTEM_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/system.json')
+HUMIDITY_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/humidity.json')
+
 
 class Thermostat():
     def __init__(self):
