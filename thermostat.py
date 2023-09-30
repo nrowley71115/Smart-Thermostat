@@ -1,11 +1,11 @@
 import json
 from datetime import datetime, timedelta
 
-SETPOINT_JSON_PATH = 'options/setpoint.json'
-TEMPERATURE_JSON_PATH = 'options/curr_temp.json'
-SCHEDULE_JSON_PATH = 'options/schedule.json'
-SYSTEM_JSON_PATH = 'options/system.json'
-HUMIDITY_JSON_PATH = 'options/humidity.json'
+SETPOINT_JSON_PATH = 'Documents/options/setpoint.json'
+TEMPERATURE_JSON_PATH = 'Documents/options/curr_temp.json'
+SCHEDULE_JSON_PATH = 'Documents/options/schedule.json'
+SYSTEM_JSON_PATH = 'Documents/options/system.json'
+HUMIDITY_JSON_PATH = 'Documents/options/humidity.json'
 
 class Thermostat():
     def __init__(self):
