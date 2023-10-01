@@ -1,7 +1,7 @@
 # PROJECT TITLE: NATHAN'S NEST
-# Video Demo:  <URL HERE>
+## Video Demo:  <URL HERE>
 
--------- TABLE OF CONTENTS --------
+##TABLE OF CONTENTS
 1) Introduction
 2) Parts
 3) HTML, CSS, JAVASCRIPT
