@@ -152,7 +152,7 @@ if __name__ == '__main__':
          t.set_schedule_mode(SCHEDULE_OPTIONS[index])
          print(f'Schedule changed from {schedule_old} to {SCHEDULE_OPTIONS[index]}')
 
-
+      # Up or Down button pressed
       if GPIO.input(PIN_LIST['up_button']) == GPIO.LOW:
          print("Up Button Pressed")
          # set schedule mode to OFF
@@ -170,7 +170,6 @@ if __name__ == '__main__':
       system = t.get_system()
       fan_mode = t.get_fan().upper()
       print(f'System: {system} Fan: {fan_mode}')
-
 
       # write current temp & setpoint to 16x2 LCD
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
