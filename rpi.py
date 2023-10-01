@@ -165,11 +165,6 @@ if __name__ == '__main__':
          t.set_schedule_mode('OFF')
          # decrease setpoint by 1
          t.set_setpoint(setpoint-1)
-      
-
-      # TODO update setpoint if necessary
-      # t.update_setpoint(setpoint)
-
 
       # get system and fan mode
       system = t.get_system()
