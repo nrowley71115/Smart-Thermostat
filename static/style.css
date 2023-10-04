@@ -25,12 +25,42 @@
   background-color: #ddd;
 }
 
+#temperatureControlForm{
+  margin: 0 auto;
+}
+
+#radio-buttons{
+  margin: 0 auto;
+  display: flex;
+  width: 60%;
+}
+
+#update-schedule-container{
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+  width: 60%;
+}
+
+.schedule-title{
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.select-time{
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  color: #333;
+}
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f0f0f0;
   margin: 0;
   padding: 0;
-  display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -73,7 +103,7 @@ body {
 }
 
 input[type="number"] {
-  width: 100%;
+  width: 30%;
   padding: 10px;
   font-size: 1em;
   border: 1px solid #ccc;
