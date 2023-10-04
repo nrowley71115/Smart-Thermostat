@@ -22,22 +22,23 @@ Home
         <form id="temperatureControlForm" action="/" method="POST">
             <fieldset class="radio-buttons">
                 <legend>System</legend>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" id="ac" name="system" value="AC">
-                    <label class="form-check-label" for="ac">AC</label>
+                <div>
+                    <input type="radio" id="ac" name="system" value="AC">
+                    <label for="ac">AC</label>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" id="sys_off" name="system" value="OFF">
-                    <label class="form-check-label" for="sys_off">OFF</label>
+                <div>
+                    <input type="radio" id="sys_off" name="system" value="OFF">
+                    <label for="sys_off">OFF</label>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" id="heat" name="system" value="HEAT">
-                    <label class="form-check-label" for="heat">HEAT</label>
+                <div>
+                    <input type="radio" id="heat" name="system" value="HEAT">
+                    <label for="heat">HEAT</label>
                 </div>
             </fieldset>
             
             <fieldset class="radio-buttons">
                 <legend>Fan</legend>
+                
                 <input type="radio" id="fanOn" name="fan" value="ON">
                 <label for="fanOn">ON</label>
                 <input type="radio" id="fanAuto" name="fan" value="AUTO">
