@@ -88,9 +88,6 @@ def statistics():
         entry['humidity'] = row[5]
 
         list_of_entries.append(entry)
-        
-    print(list_of_entries)
-
 
     return render_template("statistics.html", list_of_entries=list_of_entries)
 
@@ -142,5 +139,5 @@ def schedule():
         return render_template("schedule.html", schedule=schedule, times=TIMES)
     
 if __name__ == '__main__':
-    app.run(debug=True)
-    #app.run(debug=True, host='192.168.88.229')
+    #app.run(debug=True)
+    app.run(debug=True, host='192.168.88.229')
