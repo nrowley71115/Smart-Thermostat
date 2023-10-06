@@ -210,10 +210,10 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
 
-	    if AC_STATUS == 'ON':
+            if AC_STATUS == 'ON':
                # Add entry to data base
                t.add_db_data("AC_OFF", "HEAT_OFF")
-	       AC_STATUS = 'OFF'
+               AC_STATUS = 'OFF'
 
          # Heat on
          elif system == 'HEAT':
@@ -226,7 +226,7 @@ if __name__ == '__main__':
             if HEAT_STATUS == 'OFF':
                # Add entry to data base
                t.add_db_data("AC_OFF", "HEAT_ON")
-	       HEAT_STATUS = 'ON'
+               HEAT_STATUS = 'ON'
 
       # Too Hot
       elif temperature_f > (setpoint+t.deadband):
