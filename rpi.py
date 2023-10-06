@@ -50,10 +50,12 @@ if __name__ == '__main__':
    SCHEDULE_OPTIONS = ['ON', 'OFF']
    PIN_LIST = {'spare': 4, 'ac': 17, 'heat': 27, 'fan': 22, 
                'system_button': 13, 'fan_button': 6, 'schedule_button': 5 , 'up_button': 23, 'down_button': 24}
-   
+   AC_STATUS = 'OFF'
+   HEAT_STATUS = 'OFF'
+
    # Initialize DHT22
    dhtDevice = adafruit_dht.DHT22(board.D16, use_pulseio=False)
-   
+
    # Initialize 16x2 LCD Display
    lcd = LCD()
    lcd_counter = 1
@@ -64,7 +66,7 @@ if __name__ == '__main__':
 
    signal(SIGTERM, safe_exit)
    signal(SIGHUP, safe_exit)
-   
+
    # Initialize Relays
    GPIO.setmode(GPIO.BCM)
 
@@ -74,7 +76,7 @@ if __name__ == '__main__':
    GPIO.output(PIN_LIST['heat'], GPIO.HIGH)
    GPIO.setup(PIN_LIST['fan'], GPIO.OUT)
    GPIO.output(PIN_LIST['fan'], GPIO.HIGH)
-   
+
    # Initialize Buttons
    GPIO.setup(PIN_LIST['system_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
    GPIO.setup(PIN_LIST['fan_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -83,7 +85,7 @@ if __name__ == '__main__':
    GPIO.setup(PIN_LIST['down_button'], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
    # Thermostat Control Loop
-   while True: 
+   while True:
       # get schedule
       schedule_mode = t.get_schedule_mode().upper()
       schedule = t.get_schedule()
@@ -208,8 +210,10 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
 
-            # Add entry to data base
-            t.add_db_data("AC_OFF", "HEAT_OFF")
+	    if AC_STATUS == 'ON':
+               # Add entry to data base
+               t.add_db_data("AC_OFF", "HEAT_OFF")
+	       AC_STATUS = 'OFF'
 
          # Heat on
          elif system == 'HEAT':
@@ -219,10 +223,12 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'ON')
 
-            # Add entry to data base
-            t.add_db_data("AC_OFF", "HEAT_ON")
+            if HEAT_STATUS == 'OFF':
+               # Add entry to data base
+               t.add_db_data("AC_OFF", "HEAT_ON")
+	       HEAT_STATUS = 'ON'
 
-      # Too Hot 
+      # Too Hot
       elif temperature_f > (setpoint+t.deadband):
          # AC on
          if system == 'AC':
@@ -232,8 +238,10 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'ON')
 
-            # Add entry to data base
-            t.add_db_data("AC_ON", "HEAT_OFF")
+            if AC_STATUS == 'OFF':
+               # Add entry to data base
+               t.add_db_data("AC_ON", "HEAT_OFF")
+               AC_STATUS = 'ON'
 
          # Heat off
          elif system == 'HEAT':
@@ -242,10 +250,12 @@ if __name__ == '__main__':
             # Fan off if Auto
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
-         
-            # Add entry to data base
-            t.add_db_data("AC_OFF", "HEAT_OFF")
-      
+
+            if HEAT_STATUS == 'ON':
+               # Add entry to data base
+               t.add_db_data("AC_OFF", "HEAT_OFF")
+               HEAT_STATUS = 'OFF'
+
 
       sleep(1)
       print(".")
