@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS thermostat_data (
+    id INTEGER PRIMARY KEY,
+    timestamp DATETIME,
+    ac_action TEXT,
+    heat_action TEXT,
+    temperature REAL,
+    humidity REAL
+)

@@ -2,9 +2,37 @@
 
 
 {% block title %}
-Status
+Statistics
 {% endblock %}
 
 {% block content %}
-This is for my status page
+
+<div class="container">
+    <h1>Statistics</h1>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Date-Time</th>
+                    <th>AC Status</th>
+                    <th>Heat Status</th>
+                    <th>Temperature</th>
+                    <th>Humidity</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in list_of_entries %}
+                <tr>
+                    <td>{{entry['date_time']}}</td>
+                    <td>{{entry['ac_status']}}</td>
+                    <td>{{entry['heater_status']}}</td>
+                    <td>{{entry['temperature']}}</td>
+                    <td>{{entry['humidity']}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
 {% endblock %}

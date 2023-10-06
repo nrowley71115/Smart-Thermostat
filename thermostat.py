@@ -1,15 +1,17 @@
 import json
 import os
+import sqlite3
 from datetime import datetime, timedelta
 
 # Get the absolute path to the directory containg your script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-
+# File paths
 SETPOINT_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/setpoint.json')
 TEMPERATURE_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/curr_temp.json')
 SCHEDULE_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/schedule.json')
 SYSTEM_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/system.json')
 HUMIDITY_JSON_PATH = os.path.join(SCRIPT_DIR, 'options/humidity.json')
+SQL_DB_PATH = os.path.join(SCRIPT_DIR, 'database/thermostat.db')
 
 
 class Thermostat():
@@ -272,16 +274,74 @@ class Thermostat():
         
         return military_time_str
 
+    def add_db_data(self, ac_action, heat_action):
+        """ The point of this is to save to thermostat.sql"""
+        # Create a SQLite database file or connect to an existing one
+        db = sqlite3.connect(SQL_DB_PATH)
 
+        # Create a cursor object to execute SQL commands
+        cursor = db.cursor()
+
+        # Create a table to store thermostat data
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS thermostat_data (
+                id INTEGER PRIMARY KEY,
+                timestamp DATETIME,
+                ac_action TEXT,
+                heat_action TEXT,
+                temperature REAL,
+                humidity REAL
+            )
+        ''')
+        
+        # get current temp from JSON files
+        with open(TEMPERATURE_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        temperature = data["temperature"]
+
+        # get current humidity from JSON files
+        with open(HUMIDITY_JSON_PATH, 'r') as json_file:
+            data = json.load(json_file)
+        humidity = data["humidity"]
+
+        # Insert a row of data
+        timestamp = datetime.now()
+        cursor.execute('''
+            INSERT INTO thermostat_data (timestamp, ac_action, heat_action, temperature, humidity)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (timestamp, ac_action, heat_action, temperature, humidity))
+        db.commit()
+        print(f"Record inserted: {timestamp} - AC Action: {ac_action}, Heat Action: {heat_action} Temperature: {temperature}, Humidity: {humidity}")
+
+        db.close()
+
+    def get_db_data(self, num_entries=10):
+        """ Return the last num_entries from the database """
+        # Create a SQLite database file or connect to an existing one
+        db = sqlite3.connect(SQL_DB_PATH)
+
+        # Create a cursor object to execute SQL commands
+        cursor = db.cursor()
+
+        # Get the last num_entries from the database
+        cursor.execute(f'SELECT * FROM thermostat_data ORDER BY id DESC LIMIT {num_entries}')
+        entries = cursor.fetchall()
+
+        # Close the database connection
+        db.close()
+
+        return entries
+
+
+
+# This is for testing purposes
 if __name__ == '__main__':    
     t = Thermostat()
 
-    # test schedule for midnight and noon
-    # print(t.get_schedule())
-    # t.update_schedule("12:00 PM", "11:00 AM", 72)
-    # print("")
-    # print(t.get_schedule())
+    t.add_db_data("AC_OFF", "HEAT_OFF")
+    t.add_db_data("AC_OFF", "HEAT_ON")
+    t.add_db_data("AC_ON", "HEAT_OFF")
 
-    schedule_setpoint = t.get_schedule_setpoint()
-    print(f'Schedule setpoint: {schedule_setpoint}')
+    print('Using get_db_data()')
+    print(t.get_db_data())
     
