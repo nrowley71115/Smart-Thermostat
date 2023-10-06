@@ -139,5 +139,5 @@ def schedule():
         return render_template("schedule.html", schedule=schedule, times=TIMES)
     
 if __name__ == '__main__':
-    #app.run(debug=True)
-    app.run(debug=True, host='192.168.88.229')
+    app.run(debug=True)
+    #app.run(debug=True, host='192.168.88.229')
