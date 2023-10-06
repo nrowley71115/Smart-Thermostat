@@ -152,7 +152,7 @@ if __name__ == '__main__':
          t.set_schedule_mode(SCHEDULE_OPTIONS[index])
          print(f'Schedule changed from {schedule_old} to {SCHEDULE_OPTIONS[index]}')
 
-
+      # Up or Down button pressed
       if GPIO.input(PIN_LIST['up_button']) == GPIO.LOW:
          print("Up Button Pressed")
          # set schedule mode to OFF
@@ -165,17 +165,11 @@ if __name__ == '__main__':
          t.set_schedule_mode('OFF')
          # decrease setpoint by 1
          t.set_setpoint(setpoint-1)
-      
-
-      # TODO update setpoint if necessary
-      # t.update_setpoint(setpoint)
-
 
       # get system and fan mode
       system = t.get_system()
       fan_mode = t.get_fan().upper()
       print(f'System: {system} Fan: {fan_mode}')
-
 
       # write current temp & setpoint to 16x2 LCD
       lcd.text(f"C:{temperature_f_str}  S:{setpoint_str}", 1)
@@ -214,6 +208,9 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
 
+            # Add entry to data base
+            t.add_db_data("AC_OFF", "HEAT_OFF")
+
          # Heat on
          elif system == 'HEAT':
             heat(PIN_LIST['heat'], 'ON')
@@ -221,6 +218,9 @@ if __name__ == '__main__':
             # Fan on if Auto
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'ON')
+
+            # Add entry to data base
+            t.add_db_data("AC_OFF", "HEAT_ON")
 
       # Too Hot 
       elif temperature_f > (setpoint+t.deadband):
@@ -232,6 +232,9 @@ if __name__ == '__main__':
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'ON')
 
+            # Add entry to data base
+            t.add_db_data("AC_ON", "HEAT_OFF")
+
          # Heat off
          elif system == 'HEAT':
             heat(PIN_LIST['heat'], 'OFF')
@@ -239,6 +242,9 @@ if __name__ == '__main__':
             # Fan off if Auto
             if fan_mode == 'AUTO':
                fan(PIN_LIST['fan'], 'OFF')
+         
+            # Add entry to data base
+            t.add_db_data("AC_OFF", "HEAT_OFF")
       
 
       sleep(1)

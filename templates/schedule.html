@@ -6,72 +6,55 @@ Schedule
 
 {% block content %}
 
-<style>
-#scheduleTable {
-  border-collapse: collapse;
-  margin: 0 auto;
-  width: 60%;
-}
+<!-- Update Schedule form for schedule.JSON -->
+<div class="container">
+    <h2 class="scheudle-title">Update Schedule</h2>
+    <form id="updateScheculeForm" action="/schedule" method="POST">
+        <label>Start Time: </label>
+        <select class="select-time" id="start_time" name="start_time">
+            {% for time in times %}
+            <option value={{time}}>{{time}}</option>
+            {% endfor %}
+        </select>
 
-#scheduleTable th {
-  background-color: #333;
-  color: #fff;
-  padding: 8px;
-  text-align: left;
-}
+        <label>End Time: </label>
+        <select class="select-time" id="end_time" name="end_time">
+            {% for time in times %}
+            <option value={{time}}>{{time}}</option>
+            {% endfor %}
+        </select>
+        <div>
+        <label>Setpoint Temp: </label>
+            <input type="number" id="temperature_setpoint" name="temperature_setpoint" placeholder="Enter Temperature">
+            <input type="submit" id="updateScheduleButton"> 
+        </div> 
+    </form>
+</div>
 
-#scheduleTable tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
+<!-- List current schedule in two tables AM & PM -->
+<div class="container">
+<h1>Current Schedule</h1>
+<div class="col-xs-6">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="col-md-1">Time</th>
+                    <th class="col-md-2">Temperature</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for time, setpoint in schedule.items() %}
+                <tr>
+                    <td class="col-md-1">{{time}}</td>
+                    <td class="col-md-2">{{setpoint}} F</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
 
-#scheduleTable td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  width: 50%;
-}
-
-#scheduleTable tr:hover {
-  background-color: #ddd;
-}
-</style>
-
-<!-- Read current schedule -->
-<h2>Current Schedule</h2>
-<table id="scheduleTable">
-    <tr>
-        <th>Time</th>
-        <th>Temperature</th>
-    </tr>
-    {% for time, setpoint in schedule.items() %}
-    <tr>
-        <td>{{time}}</td>
-        <td>{{setpoint}} F</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<!-- Update Schedule JSON -->
-<h2>Update Schedule</h2>
-<form id="updateScheculeForm" action="/schedule" method="POST">
-    <label>Start Time: </label>
-    <select id="start_time" name="start_time">
-        {% for time in times %}
-        <option value={{time}}>{{time}}</option>
-        {% endfor %}
-    </select>
-
-    <label>End Time: </label>
-    <select id="end_time" name="end_time">
-        {% for time in times %}
-        <option value={{time}}>{{time}}</option>
-        {% endfor %}
-    </select>
-
-    <label>Setpoint Temp: </label>
-    <input type="number" id="temperature_setpoint" name="temperature_setpoint" placeholder="Enter Temperature">
-    <button type="submit" id="updateScheduleButton">Submit</button>   
-</form>
-
-<br><br>
 
 {% endblock %}

@@ -7,78 +7,57 @@ Home
 
 
 {% block content %}
-    <script>
-        window.addEventListener('load', function() {
-            // Get the value of the system radio button from the server
-            var systemValue = "{{ system }}";
-            // Get the value of the fan radio button from the server
-            var fanValue = "{{ fan }}";
-            // Get the value of the schedule radio button from the server
-            var scheduleValue = "{{ schedule }}";
-            
-            // Check the correct system radio button
-            var systemRadios = document.getElementsByName('system');
-            for (var i = 0; i < systemRadios.length; i++) {
-                if (systemRadios[i].value === systemValue) {
-                    systemRadios[i].checked = true;
-                }
-            }
-            
-            // Check the correct fan radio button
-            var fanRadios = document.getElementsByName('fan');
-            for (var i = 0; i < fanRadios.length; i++) {
-                if (fanRadios[i].value === fanValue) {
-                    fanRadios[i].checked = true;
-                }
-            }
 
-            // Check the correct schedule radio button
-            var scheduleRadios = document.getElementsByName('schedule');
-            for (var i = 0; i < scheduleRadios.length; i++) {
-                if (scheduleRadios[i].value === scheduleValue) {
-                    scheduleRadios[i].checked = true;
-                }
-            }
-        });
-    </script>
-
-    <h1>Temperature Control</h1>
-
-    <p>Current Temperature: {{curr_temp}}°F</p>
-    <p>Current Humidity: {{humidity}}%</p>
-    <p>Current Setpoint: {{setpoint}}°F</p>
-    <p>Current Scheduled Setpoint: {{schedule_setpoint}}</p>
-
-    <form id="temperatureControlForm" action="/" method="POST">
-        <label for="setpointTemperature">Setpoint Temperature (°F):</label>
-        <input type="number" id="setpointTemperature" name="setpointTemperature" step="1" min="0">
+    <div class="container">
+        <div class="temperature-container">
+            <div class="large-text">
+                <span id="current-temperature">{{curr_temp}}°F</span>
+                <span id="current-humidity">{{humidity}}%HM</span>
+            </div>
+            <div class="small-text">
+                <span id="setpoint">Setpoint: {{setpoint}}</span>
+                <span id="schedule-setpoint">Scheduled: {{schedule_setpoint}}</span>
+            </div>
+        </div>
+        <form id="temperatureControlForm" action="/" method="POST">
+            <div id="radio-buttons">
+                <fieldset>
+                    <legend>System</legend>
+                    <input type="radio" id="ac" name="system" value="AC">
+                    <label for="ac">AC</label>
+                    <input type="radio" id="sys_off" name="system" value="OFF">
+                    <label for="sys_off">OFF</label>
+                    <input type="radio" id="heat" name="system" value="HEAT">
+                    <label for="heat">HEAT</label>
+                </fieldset>
+                
+                <fieldset id="fan-radio-button">
+                    <legend>Fan</legend>
+                    <input type="radio" id="fanOn" name="fan" value="ON">
+                    <label for="fanOn">ON</label>
+                    <input type="radio" id="fanAuto" name="fan" value="AUTO">
+                    <label for="fanAuto">AUTO</label>
+                </fieldset>
         
-        <fieldset>
-            <legend>System</legend>
-            <input type="radio" id="ac" name="system" value="AC">
-            <label for="ac">AC</label>
-            <input type="radio" id="sys_off" name="system" value="OFF">
-            <label for="off">OFF</label>
-            <input type="radio" id="heat" name="system" value="HEAT">
-            <label for="heat">HEAT</label>
-        </fieldset>
-        
-        <fieldset>
-            <legend>Fan</legend>
-            <input type="radio" id="fanOn" name="fan" value="ON">
-            <label for="fanOn">ON</label>
-            <input type="radio" id="fanAuto" name="fan" value="AUTO">
-            <label for="fanAuto">AUTO</label>
-        </fieldset>
+                <fieldset>
+                    <legend>Schedule</legend>
+                    <input type="radio" id="schedule_on" name="schedule" value="ON">
+                    <label for="ac">ON</label>
+                    <input type="radio" id="schedule_off" name="schedule" value="OFF">
+                    <label for="off">OFF</label>
+                </fieldset>
+            </div>
+            <input type="number" id="setpointTemperature" name="setpointTemperature" placeholder="Enter new temperature" step="1" min="0">
+            <input type="submit" id="updateButton">
+        </form>
+    </div>
 
-        <fieldset>
-            <legend>Schedule</legend>
-            <input type="radio" id="schedule_on" name="schedule" value="ON">
-            <label for="ac">ON</label>
-            <input type="radio" id="schedule_off" name="schedule" value="OFF">
-            <label for="off">OFF</label>
-        </fieldset>
-        
-        <button type="submit" id="updateButton">Update</button>
-    </form>
+
+<!-- Check current radio buttons according to JSON files -->
+<script>
+    window.addEventListener('load', function() {
+      setRadioButtons("{{system}}", "{{fan}}", "{{schedule}}");
+    });
+</script>
+
 {% endblock %}

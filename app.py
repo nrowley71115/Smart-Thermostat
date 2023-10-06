@@ -71,7 +71,28 @@ def index():
 
 @app.route("/statistics")
 def statistics():
-    return render_template("statistics.html")
+    # initalize thermostat
+    thermostat = Thermostat()
+
+    # get number of entries from db
+    sql_data = thermostat.get_db_data()
+
+    list_of_entries = []
+    for row in sql_data:
+        entry = {}
+        entry['id'] = row[0]
+        entry['date_time'] = row[1]
+        entry['ac_status'] = row[2]
+        entry['heater_status'] = row[3]
+        entry['temperature'] = row[4]
+        entry['humidity'] = row[5]
+
+        list_of_entries.append(entry)
+        
+    print(list_of_entries)
+
+
+    return render_template("statistics.html", list_of_entries=list_of_entries)
 
 
 @app.route("/schedule", methods=['GET', 'POST'])
@@ -121,4 +142,5 @@ def schedule():
         return render_template("schedule.html", schedule=schedule, times=TIMES)
     
 if __name__ == '__main__':
-    app.run(debug=True, host='192.168.88.229')
+    app.run(debug=True)
+    #app.run(debug=True, host='192.168.88.229')
