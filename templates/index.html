@@ -12,47 +12,41 @@ Home
         <div class="temperature-container">
             <div class="large-text">
                 <span id="current-temperature">{{curr_temp}}°F</span>
-                <span id="current-humidity">{{humidity}}%</span>
+                <span id="current-humidity">{{humidity}}%HM</span>
             </div>
             <div class="small-text">
                 <span id="setpoint">Setpoint: {{setpoint}}</span>
-                <span id="schedule-setpoint">Scheduled Setpoint: {{schedule_setpoint}}</span>
+                <span id="schedule-setpoint">Scheduled: {{schedule_setpoint}}</span>
             </div>
         </div>
         <form id="temperatureControlForm" action="/" method="POST">
-            <fieldset class="radio-buttons">
-                <legend>System</legend>
-                <div>
+            <div id="radio-buttons">
+                <fieldset>
+                    <legend>System</legend>
                     <input type="radio" id="ac" name="system" value="AC">
                     <label for="ac">AC</label>
-                </div>
-                <div>
                     <input type="radio" id="sys_off" name="system" value="OFF">
                     <label for="sys_off">OFF</label>
-                </div>
-                <div>
                     <input type="radio" id="heat" name="system" value="HEAT">
                     <label for="heat">HEAT</label>
-                </div>
-            </fieldset>
-            
-            <fieldset class="radio-buttons">
-                <legend>Fan</legend>
+                </fieldset>
                 
-                <input type="radio" id="fanOn" name="fan" value="ON">
-                <label for="fanOn">ON</label>
-                <input type="radio" id="fanAuto" name="fan" value="AUTO">
-                <label for="fanAuto">AUTO</label>
-            </fieldset>
-    
-            <fieldset class="radio-buttons">
-                <legend>Schedule</legend>
-                <input type="radio" id="schedule_on" name="schedule" value="ON">
-                <label for="ac">ON</label>
-                <input type="radio" id="schedule_off" name="schedule" value="OFF">
-                <label for="off">OFF</label>
-            </fieldset>
-            
+                <fieldset id="fan-radio-button">
+                    <legend>Fan</legend>
+                    <input type="radio" id="fanOn" name="fan" value="ON">
+                    <label for="fanOn">ON</label>
+                    <input type="radio" id="fanAuto" name="fan" value="AUTO">
+                    <label for="fanAuto">AUTO</label>
+                </fieldset>
+        
+                <fieldset>
+                    <legend>Schedule</legend>
+                    <input type="radio" id="schedule_on" name="schedule" value="ON">
+                    <label for="ac">ON</label>
+                    <input type="radio" id="schedule_off" name="schedule" value="OFF">
+                    <label for="off">OFF</label>
+                </fieldset>
+            </div>
             <input type="number" id="setpointTemperature" name="setpointTemperature" placeholder="Enter new temperature" step="1" min="0">
             <input type="submit" id="updateButton">
         </form>
