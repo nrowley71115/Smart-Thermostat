@@ -337,11 +337,5 @@ class Thermostat():
 # This is for testing purposes
 if __name__ == '__main__':    
     t = Thermostat()
-
-    t.add_db_data("AC_OFF", "HEAT_OFF")
-    t.add_db_data("AC_OFF", "HEAT_ON")
-    t.add_db_data("AC_ON", "HEAT_OFF")
-
-    print('Using get_db_data()')
-    print(t.get_db_data())
+    print('thermostat.py ran successfully - Use the Thermostat class to interact with the thermostat')
     
