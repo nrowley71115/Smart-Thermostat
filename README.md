@@ -81,7 +81,12 @@ TODO
 
 
 -------- REPLICATE SETUP --------
+DHT sensor
+sudo pip3 install adafruit-circuitpython-dht
+sudo apt-get install libgpiod2
 
+LCD Display
+sudo pip3 install rpi_lcd
 
 -------- FUTURE IMPROVEMENTS --------
 PCB?
