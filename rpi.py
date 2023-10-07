@@ -103,6 +103,8 @@ if __name__ == '__main__':
       # get current temp & humidity
       try:
          temperature_c = dhtDevice.temperature
+         if temperature_c is None:
+            temperature_c = 22.2
          temperature_f = round(temperature_c * (9/5) + 32, 1)
          temperature_f_str = f'{temperature_f} F'
          humidity = dhtDevice.humidity
