@@ -23,7 +23,7 @@ This project was written for two reasons. First, I wanted to build a smart therm
 Here I've listed all of the parts required to replicate my smart thermostat and some optional parts. I've included personal notes in parenthesis and links to purchase these devices with the price as of Sep 2023.
 
 Required:
-- Raspberry Pi (tested with pi 4B and zero 2 W) https://www.raspberrypi.com/products/raspberry-pi-4-model-b/ - $35
+- Raspberry Pi (tested and works with pi 4B and zero 2w) https://www.raspberrypi.com/products/raspberry-pi-4-model-b/ - $35
 - 4 Relay Module (I only used three for Fan, AC, and Heat control) https://www.amazon.com/dp/B00E0NSORY?ref=ppx_yo2ov_dt_b_product_details&th=1 - $8
 - I2C 16x2 LCD Display https://www.amazon.com/dp/B07S7PJYM6?psc=1&ref=ppx_yo2ov_dt_b_product_details - $11
 - DHT22 temperature & humidity sensor https://www.amazon.com/dp/B01N9BA0O4?ref=ppx_yo2ov_dt_b_product_details&th=1 - $9
@@ -78,7 +78,7 @@ TODO
 
 
 -------- 3D MODELS --------
-
+I've included the 3D models for my case and lid. It has places to mount the relay board, raspberry pi zero 2w, lcd display, and holes for buttons. Please feel free to use this 3D model.
 
 -------- REPLICATE SETUP --------
 DHT sensor
@@ -87,6 +87,17 @@ sudo apt-get install libgpiod2
 
 LCD Display
 sudo pip3 install rpi_lcd
+
+Auto start web app and thermostat
+sudo nano /etc/rc.local
+
+Install the git repsoitor
+Be sure to inside of the Documents folder. Your directory should be /home/pi/Documents/cs50_final_project/
+git clone xxxxx
+
+add this code at the bottom and before the *delay*
+
+
 
 -------- FUTURE IMPROVEMENTS --------
 PCB?
